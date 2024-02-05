@@ -1,0 +1,15 @@
+from typing import List
+
+
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        low, high = -1, len(nums)
+        while (low+1 < high):
+            mid = low + (high-low)//2
+            if nums[mid] == target:
+                return mid
+            if nums[mid] < target:
+                low = mid
+            else:
+                high = mid
+        return high if high < len(nums) and nums[high] == target else -1
