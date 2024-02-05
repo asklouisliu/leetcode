@@ -1,0 +1,27 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：
+    #   二分
+    #
+    # 思路：
+    #   开区间二分，在[1,n-2]范围染色
+    #   左侧绿色(T):后继元素的值更大
+    #   红色部分(F):非绿条件
+    #   退出开区间二分，返回low
+    #
+    # 时间复杂度：
+    #   O(logn)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def peakIndexInMountainArray(self, arr: List[int]) -> int:
+        low, high = 0, len(arr)-1
+        while (low+1 < high):
+            mid = low+(high-low)//2
+            if arr[mid] > arr[mid-1]:
+                low = mid
+            else:
+                high = mid
+        return low

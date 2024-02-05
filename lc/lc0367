@@ -1,12 +1,26 @@
 class Solution:
+    # 方法一：
+    #   二分
+    #
+    # 思路：
+    #   开区间二分，在[0,num]范围内染色
+    #   若n*n==num，返回True
+    #   左侧绿色(T):n*n<num
+    #   右侧红色(F):n*n>num
+    #   退出开区间二分，返回False
+    #
+    # 时间复杂度：
+    #   O(logn)
+    #
+    # 空间复杂度：
+    #   O(1)
     def isPerfectSquare(self, num: int) -> bool:
         low, high = -1, num+1
         while (low+1 < high):
             mid = low+(high-low)//2
-            square = mid*mid
-            if square == num:
+            if mid*mid == num:
                 return True
-            if square < num:
+            if mid*mid < num:
                 low = mid
             else:
                 high = mid

@@ -1,0 +1,42 @@
+class Solution:
+    # 方法一：
+    #
+    # 思路：
+    #   前k行一最多有1+2+...+k=k*(k+1)/2枚硬币
+    #   问题转化为找到一个最大的k，满足k*(k+1)/2≤n
+    #   采用开区间二分，在[1,n]范围染色
+    #   左侧绿色(T):k*(k+1)/2≤n
+    #   右侧红色(F):k*(k+1)/2>n
+    #   退出开区间二分，返回low
+    #
+    # 时间复杂度：
+    #   O(logn)
+    #
+    # 空间复杂度:
+    #   O(1)
+    def arrangeCoins(self, n: int) -> int:
+        low, high = 0, n+1
+        while (low+1 < high):
+            mid = low + (high-low) // 2
+            if mid*(mid+1) <= 2*n:
+                low = mid
+            else:
+                high = mid
+        return low
+
+    # 方法二：
+    #   数学
+    #
+    # 思路：
+    #   问题转化为，求解k*(k+1)/2≤n的最大整数k
+    #   k*k+k-2n≤0
+    #   两个根分别为x1=(-1-sqrt(1+8n))/2，x2=(-1+sqrt(1+8b)/2)
+    #   max(k)=x2的下取整
+    #
+    # 时间复杂度：
+    #   涉及CPU指令，不讨论
+    #
+    # 空间复杂度：
+    #   涉及CPU指令，不讨论
+    def arrangeCoins2(self, n: int) -> int:
+        return int((pow(8*n+1, 0.5)-1)/2)

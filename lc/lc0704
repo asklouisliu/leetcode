@@ -2,10 +2,25 @@ from typing import List
 
 
 class Solution:
+    # 方法一：
+    #   二分
+    #
+    # 思路：
+    #   开区间二分，在[0,n-1]上染色
+    #   若元素=target，返回该元素
+    #   左侧绿色(T):元素小于target
+    #   右侧红色(F):元素大于等于target
+    #   退出开区间二分，返回有效high或-1
+    #
+    # 时间复杂度:
+    #   O(logn)
+    #
+    # 空间复杂度：
+    #   O(1)
     def search(self, nums: List[int], target: int) -> int:
         low, high = -1, len(nums)
         while (low+1 < high):
-            mid = low + (high-low)//2
+            mid = low+(high-low)//2
             if nums[mid] == target:
                 return mid
             if nums[mid] < target:

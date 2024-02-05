@@ -1,12 +1,26 @@
 class Solution:
+    # 方法一：
+    #   二分
+    #
+    # 思路：
+    #   开区间二分，在[0,x]范围内搜索
+    #   若n*n=x，返回n
+    #   左侧绿色(T):n*n<x
+    #   右侧红色(F):n*n>x
+    #   返回low
+    #
+    # 时间复杂度：
+    #   O(logx)
+    #
+    # 空间复杂度：
+    #   O(1)
     def mySqrt(self, x: int) -> int:
         low, high = -1, x+1
         while (low+1 < high):
             mid = low+(high-low)//2
-            square = mid*mid
-            if square == x:
+            if mid*mid == x:
                 return mid
-            if square < x:
+            if mid*mid < x:
                 low = mid
             else:
                 high = mid

@@ -2,10 +2,24 @@ from typing import List
 
 
 class Solution:
+    # 方法一：
+    #   二分
+    #
+    # 思路：
+    #   采用开区间二分，对[0,n-1]范围内染色
+    #   左侧绿色(T)：小于target的部分
+    #   右侧红色(F)：大于等于target的部分
+    #   返回high
+    #
+    # 时间复杂度:
+    #   O(logn)
+    #
+    # 空间复杂度：
+    #   O(1)
     def searchInsert(self, nums: List[int], target: int) -> int:
         low, high = -1, len(nums)
         while (low+1 < high):
-            mid = low+(high-low)//2
+            mid = low + (high-low)//2
             if nums[mid] < target:
                 low = mid
             else:
