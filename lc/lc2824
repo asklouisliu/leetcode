@@ -1,0 +1,81 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：
+    #   枚举
+    #
+    # 思路：
+    #   遍历两个数组
+    #
+    # 时间复杂度：
+    #   O(n^2)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def countPairs1(self, nums: List[int], target: int) -> int:
+        cnt = 0
+        for i in range(0, len(nums)-1):
+            for j in range(i+1, len(nums)):
+                if nums[i] + nums[j] < target:
+                    cnt += 1
+        return cnt
+
+    # 方法二：
+    #   排序 + 二分
+    #
+    # 思路：
+    #   先递增排序
+    #   对每一个1≤j≤n-1，找到最大的i，使得nums[i]+nums[j]<target
+    #     若nums[j]>target，直接退出
+    #     若nums[j]≤target，采用开区间二分，在范围[0,j-1]内染色寻找上述i
+    #       左侧绿色(F)：nums[i]+nums[j]<target
+    #       右侧红色(T)：非绿条件
+    #       退出开区间二分，low即为最大的i，此时nums[≤i]均符合条件，即对答案贡献i+1
+    #
+    # 时间复杂度：
+    #   O(nlogn)
+    #
+    # 空间复杂度：
+    #   O(logn)
+    def countPairs2(self, nums: List[int], target: int) -> int:
+        nums.sort()
+        cnt = 0
+        for j in range(1, len(nums)):
+            if nums[j] > target:
+                break
+            low, high = -1, j
+            while (low+1 < high):
+                mid = low+(high-low)//2
+                if nums[mid] + nums[j] < target:
+                    low = mid
+                else:
+                    high = mid
+            cnt += low+1
+        return cnt
+
+    # 方法三：
+    #   排序 + 双指针
+    #
+    # 思路：
+    #   先递增排序
+    #   初始化双指针i=0，j=n-1，遍历整个数组
+    #   若nums[i]+nums[j]≥target，需要减少两个元素的和，即j--
+    #   若nums[i]+nums[j]<target，需要增加两个元素的和，即i++
+    #     对于固定的j,[i,j-1]均为可取的i，对结果的贡献是j-i
+    #
+    # 时间复杂度:
+    #   O(logn)，瓶颈在排序操作
+    #
+    # 空间复杂度：
+    #   O(1)
+    def countPairs(self, nums: List[int], target: int) -> int:
+        nums.sort()
+        cnt, i, j = 0, 0, len(nums)-1
+        while (i < j):
+            if nums[i] + nums[j] >= target:
+                j -= 1
+            else:
+                cnt += j-i
+                i += 1
+        return cnt
