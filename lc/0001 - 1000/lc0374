@@ -1,0 +1,27 @@
+def guess(num: int) -> int:
+    return 1
+
+
+class Solution:
+    # 方法一：
+    #   二分
+    #
+    # 思路：
+    #   开区间二分，在[1,n]范围内染色
+    #
+    # 时间复杂度：
+    #   O(logn)
+    #
+    # 空间复杂度
+    #   O(1)
+    def guessNumber(self, n: int) -> int:
+        low, high = -1, n+1
+        while low + 1 < high:
+            mid = (low+high) >> 1
+            if guess(mid) == 0:
+                return mid
+            if guess(mid) < 0:
+                high = mid
+            else:
+                low = mid
+        return -1

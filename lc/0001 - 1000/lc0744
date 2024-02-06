@@ -1,0 +1,27 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：
+    #   二分
+    #
+    # 思路：
+    #   开区间二分，在[0,n-1]范围内染色
+    #   左侧绿色(T):字符小于等于target
+    #   右侧红色(F):非绿条件
+    #   退出开区间二分，返回合理的high
+    #
+    # 时间复杂度:
+    #   O(logn)
+    #
+    # 空间复杂度:
+    #   O(1)
+    def nextGreatestLetter(self, letters: List[str], target: str) -> str:
+        low, high = -1, len(letters)
+        while (low+1 < high):
+            mid = low + (high-low)//2
+            if letters[mid] <= target:
+                low = mid
+            else:
+                high = mid
+        return letters[high] if high < len(letters) else letters[0]
