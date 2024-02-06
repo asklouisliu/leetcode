@@ -1,0 +1,80 @@
+from typing import Optional
+
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+
+class Solution:
+    # 方法一：
+    #   递归
+    #
+    # 思路：
+    #   递归成左右子树子问题
+    #
+    # 时间复杂度：
+    #   O(n)
+    #
+    # 空间复杂度：
+    #   O(logn)
+    def countNodes1(self, root: Optional[TreeNode]) -> int:
+        if root is None:
+            return 0
+        return 1 + self.countNodes(root.left) + self.countNodes(root.right)
+
+    # 方法二：
+    #   完全二叉树 + 二分 + 位运算
+    #
+    # 思路：
+    #   充分利用完全二叉树的性质：
+    #     1. 完全二叉树的深度 = 左下叶子节点的深度，假定根节点的深度为0
+    #     2. 0≤i<h时，该层节点数量为2^i
+    #     3. i=h时候，该层节点数量范围为[1,2^h]
+    #     4. 推导出，完全二叉树的节点总数
+    #           最小=sum(2^i)[0...h-1]+1=2^h
+    #           最大=sum(2^i)[0...h]=2^(h+1)-1
+    #   首先，利用性质1求解出完全二叉树的深度h，O(logn)
+    #   然后，采用开区间二分查找，在范围[2^h, 2^(h+1)-1]范围内染色，O((logn)^2)
+    #       左侧绿色(T):节点在完全二叉树上，O(logn)
+    #       右侧红色(F):节点不在完全二叉树上，O(logn)
+    #       退出开区间二分，返回low
+    #   另外，如何判断节点i在完全二叉树上？O(logn)
+    #       此时，第i个节点位于完全二叉树最后一层
+    #       则i的二进制表示包含h+1位，最高位是1
+    #       其余各个从高到低位表示根节点到第i个节点的路径，0表示移动到左节点，1表示移动到右节点
+    #
+    # 时间复杂度：
+    #   O((logn)^2)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def countNodes(self, root: Optional[TreeNode]) -> int:
+
+        # 求解完全二叉树的深度h
+        h, node = -1, root
+        while (node):
+            node = node.left
+            h += 1
+
+        # 特殊情况处理
+        if h <= 0:
+            return h+1
+
+        # 开区间二分
+        low, high, bits = (1 << h)-1, 1 << (h+1), 1 << (h-1)
+        while low+1 < high:
+            mid, mask, node = (low+high) >> 1, bits, root
+            while mask > 0:
+                if mid & mask == 0:
+                    node = node.left
+                else:
+                    node = node.right
+                mask >>= 1
+            if node is not None:
+                low = mid
+            else:
+                high = mid
+        return low
