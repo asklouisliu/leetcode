@@ -1,0 +1,82 @@
+from typing import List
+
+
+class Solution:
+
+    # 方法一：
+    #   排序 + 枚举
+    #
+    # 思路：
+    #   先递增排序，后遍历数组
+    #
+    # 时间复杂度：
+    #   O(nlogn)
+    #
+    # 空间复杂度：
+    #   O(logn)
+    def targetIndices1(self, nums: List[int], target: int) -> List[int]:
+        nums.sort()
+        list = []
+        for i, n in enumerate(nums):
+            if n == target:
+                list.append(i)
+        return list
+
+    # 方法二：
+    #   排序 + 二分
+    #
+    # 思路:
+    #   先递增排序
+    #   利用二分找到第一次出现target的下标，以及最后一次出现target的下标
+    #
+    # 时间复杂度：
+    #   O(nlogn)
+    #
+    # 空间复杂度：
+    #   O(logn)
+    def targetIndices2(self, nums: List[int], target: int) -> List[int]:
+        nums.sort()
+
+        # 寻找第一个target的下标，在范围[0,n-1]内染色
+        low, high = -1, len(nums)
+        while (low + 1 < high):
+            mid = low + (high-low)//2
+            if nums[mid] < target:
+                low = mid
+            else:
+                high = mid
+        start = high
+        if high == len(nums) or nums[high] != target:
+            return []  # 没有target，直接返回[]
+
+        # 寻找最后一个target的下标，在范围[high+1,n-1]内染色
+        low, high = high, len(nums)
+        while (low + 1 < high):
+            mid = low + (high-low)//2
+            if nums[mid] <= target:
+                low = mid
+            else:
+                high = mid
+        end = low
+
+        return [i for i in range(start, end+1)]
+
+    # 方法三：
+    #   计数
+    #
+    # 思路：
+    #   分别计算小于和大于target的数量
+    #
+    # 时间复杂度：
+    #   O(n)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def targetIndices(self, nums: List[int], target: int) -> List[int]:
+        cnt1, cnt2 = 0, 0
+        for i, n in enumerate(nums):
+            if n < target:
+                cnt1 += 1
+            if n > target:
+                cnt2 += 1
+        return [i for i in range(cnt1, len(nums) - cnt2)]
