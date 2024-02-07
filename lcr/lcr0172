@@ -1,0 +1,40 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：
+    #   二法
+    #
+    # 思路：
+    #   分别二分查找第一次和最后一次出现target的位置
+    #
+    # 时间复杂度：
+    #   O(logn)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def countTarget(self, scores: List[int], target: int) -> int:
+        # 二分查找第一次出现target的位置
+        low, high = -1, len(scores)
+        while low+1 < high:
+            mid = (low+high) >> 1
+            if scores[mid] < target:
+                low = mid
+            else:
+                high = mid
+        start = high
+
+        # 如果不存在target
+        if start == len(scores) or scores[start] != target:
+            return 0
+
+        # 二分查找最后一次出现target的位置
+        low, high = high, len(scores)
+        while low+1 < high:
+            mid = (low+high) >> 1
+            if scores[mid] <= target:
+                low = mid
+            else:
+                high = mid
+
+        return low-start+1
