@@ -1,0 +1,25 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：
+    #   哈希
+    #
+    # 思路：
+    #   遍历每个数字时
+    #     i in set，  会检查之前是否遇到过该数字的一半
+    #     4i in set， 会检查之前是否遇到过该数字的两倍
+    #     然后都往set中添加该数字的两倍
+    #
+    # 时间复杂度：
+    #   O(n)
+    #
+    # 空间复杂度：
+    #   O(n)
+    def checkIfExist(self, arr: List[int]) -> bool:
+        s = set()
+        for i in arr:
+            if i in s or 4*i in s:
+                return True
+            s.add(2*i)
+        return False

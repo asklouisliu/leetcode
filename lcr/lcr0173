@@ -1,0 +1,15 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：
+    #   数学
+    #
+    # 时间复杂度：
+    #   O(n)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def takeAttendance(self, records: List[int]) -> int:
+        n = len(records)
+        return n*(n+1)//2 - sum(records)

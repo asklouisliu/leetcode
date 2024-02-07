@@ -1,0 +1,47 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：
+    #   娱乐
+    #
+    # 时间复杂度：
+    #   O(n)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def stockManagement1(self, stock: List[int]) -> int:
+        return min(stock)
+
+    # 方法二:
+    #   二分
+    #
+    # 思路：
+    #   整个数组被划分成两段递增数组，其中分界点属于第二段
+    #   第一段：最小值左侧；第二段：最小值及其右侧，显然，第二段至少有一个元素
+    #   开区间二分，在范围[0,n-2]上染色
+    #   需要判断二分位置mid属于哪一段
+    #       1. 若stock[mid]>stock[high]：第一段
+    #       2. 若stock[mid]<stock[high]：第二段
+    #       3. 若stock[mid]=stock[high]：不确定
+    #               直接去掉末尾元素stock[high]，即high--，继续二分
+    #               会不会碰巧去掉最小值？
+    #               若末尾元素不是最小值：相当于排除了一个错误答案，缩小了搜索范围
+    #               若末尾元素就是最小值：那么stock[mid]亦是最小值，说明最小值仍然在搜索范围内
+    #
+    # 时间复杂度：
+    #   O(logn)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def stockManagement(self, stock: List[int]) -> int:
+        low, high = -1, len(stock)-1
+        while low+1 < high:
+            mid = (low+high) >> 1
+            if stock[mid] > stock[high]:  # mid在第一段
+                low = mid
+            elif stock[mid] < stock[high]:  # mid在第二段
+                high = mid
+            else:  # 无法判断mid在第一段还是第二段
+                high -= 1
+        return stock[high]
