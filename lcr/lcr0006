@@ -1,0 +1,70 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：
+    #   双指针
+    #
+    # 思路：
+    #   初始头尾两个双指针
+    #   若元素之和小于target，left++;反之，right--
+    #
+    # 时间复杂度：
+    #   O(n)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def twoSum1(self, numbers: List[int], target: int) -> List[int]:
+        left, right = 0, len(numbers)-1
+        while left < right:
+            if numbers[left] + numbers[right] == target:
+                return [left, right]
+            elif numbers[left] + numbers[right] < target:
+                left += 1
+            else:
+                right -= 1
+        return []
+
+    # 方法二：
+    #   双指针 + 二分
+    #
+    # 思路：
+    #   在方法一的基础上加入二分，快速更新left和right
+    #
+    # 时间复杂度：
+    #   O(logn)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def twoSum(self, numbers: List[int], target: int) -> List[int]:
+        left, right = 0, len(numbers)-1
+        while left < right:
+            if numbers[left] + numbers[right] == target:
+                return [left, right]
+            elif numbers[left] + numbers[right] < target:
+                # 更新left
+                # 开区间二分，在范围[left+1,right-1]染色
+                low, high = left, right
+                while low+1 < high:
+                    mid = (low+high) >> 1
+                    if numbers[mid]+numbers[right] == target:
+                        return [mid, right]
+                    if numbers[mid]+numbers[right] < target:
+                        low = mid
+                    else:
+                        high = mid
+                left = low + 1
+            else:
+                # 更新right
+                # 开区间二分，在范围[left+1,right-1]染色
+                low, high = left, right
+                while low+1 < high:
+                    mid = (low+high) >> 1
+                    if numbers[left]+numbers[mid] == target:
+                        return [left, mid]
+                    if numbers[left]+numbers[mid] > target:
+                        high = mid
+                    else:
+                        low = mid
+                right = high - 1
+        return []
