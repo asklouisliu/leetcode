@@ -1,0 +1,35 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：
+    #   排序 + 前缀和 + 二分
+    #
+    # 思路：
+    #   为了能让子序列尽量长，子序列中的元素值越小越好
+    #   先然后元素小标对结果不影响，先对数组经行排序O(nlogn)，然后计算前缀和O(n)
+    #   在利用开区间二分，逐个找出所有的最大长度O(mlogn)
+    #
+    # 时间复杂度：
+    #   O((m+n)logn)
+    #
+    # 空间复杂度：
+    #   O(1)，不考虑排序
+    def answerQueries(self, nums: List[int], queries: List[int]) -> List[int]:
+        nums.sort()
+        # 原地计算前缀和
+        for i in range(1, len(nums)):
+            nums[i] += nums[i-1]
+        # 逐个计算最大长度
+        ans = []
+        for q in queries:
+            # 开区间二分，搜索范围[0,n-1]，≤q的部分染绿色
+            low, high = -1, len(nums)
+            while low+1 < high:
+                mid = (low+high) >> 1
+                if nums[mid] <= q:
+                    low = mid
+                else:
+                    high = mid
+            ans.append(low+1)
+        return ans

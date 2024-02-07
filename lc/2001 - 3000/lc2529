@@ -1,0 +1,46 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：
+    #   二分
+    #
+    # 思路：
+    #   使用开区间二分，分别寻找最大的负数和最大的非正数
+    #
+    # 时间复杂度：
+    #   O(logn)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def maximumCount(self, nums: List[int]) -> int:
+        # 先寻找最大的负数，开区间二分，在范围[0,n-1]内染色
+        # 左侧绿色(T):小于0
+        # 右侧红色(F):非绿条件
+        # 退出开区间二分，low+1即为负数个数
+        low, high = -1, len(nums)
+        while low+1 < high:
+            mid = (low+high) >> 1
+            if nums[mid] < 0:
+                low = mid
+            else:
+                high = mid
+        neg = low+1
+
+        # 再寻找最大的非正数，开区间二分，在范围[low,n-1]内染色
+        # 左侧绿色(T):小于等于0
+        # 右侧红色(F):非绿条件
+        # 退出开区间二分，low+1即为非正数个数
+        low, high = max(low-1, -1), len(nums)
+        while low+1 < high:
+            mid = (low+high) >> 1
+            if nums[mid] <= 0:
+                low = mid
+            else:
+                high = mid
+        pos = len(nums) - (low+1)
+
+        return max(neg, pos)
+
+
+t = Solution().maximumCount([5, 20, 66, 1314])
