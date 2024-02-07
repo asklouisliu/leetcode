@@ -1,0 +1,54 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：
+    #   娱乐
+    def intersection1(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        return list(set(nums1) & set(nums2))
+
+    # 方法二：
+    #   哈希
+    #
+    # 思路：
+    #   将nums1存入哈希表
+    #
+    # 时间复杂度:
+    #   O(m+n)
+    #
+    # 空间复杂度：
+    #   O(m)
+    def intersection2(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        dic, res = {}, []
+        for i in nums1:
+            dic[i] = 1
+        for i in nums2:
+            if dic.get(i):
+                res.append(i)
+                dic[i] = 0
+        return res
+
+    # 方法三：
+    #   哈希
+    #
+    # 思路：
+    #   在方法二的基础上，优化空间复杂度
+    #   将较小的数组存入哈希表
+    #
+    # 时间复杂度:
+    #   O(m+n)
+    #
+    # 空间复杂度：
+    #   O(min(m,n))
+    def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        if (len(nums2) < len(nums1)):
+            self.intersection(nums2, nums1)
+
+        dic, res = {}, []
+        for i in nums1:
+            dic[i] = 1
+        for i in nums2:
+            if dic.get(i):
+                res.append(i)
+                dic[i] = 0
+        return res

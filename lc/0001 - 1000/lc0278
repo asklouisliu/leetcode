@@ -1,0 +1,28 @@
+def isBadVersion(version: int) -> bool:
+    return True
+
+
+class Solution:
+    # 方法一：
+    #   二分
+    #
+    # 思路：
+    #   开区间二分，在[1,n]范围内染色
+    #   左侧绿色(T):好的版本
+    #   右侧红色(F):非绿条件
+    #   退出开区间二分，返回high
+    #
+    # 时间复杂度:
+    #   O(logn)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def firstBadVersion(self, n: int) -> int:
+        low, high = 0, n+1
+        while low + 1 < high:
+            mid = (low+high) >> 1
+            if isBadVersion(mid) == False:
+                low = mid
+            else:
+                high = mid
+        return high
