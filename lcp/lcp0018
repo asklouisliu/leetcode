@@ -1,0 +1,56 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：(超时)
+    #   枚举
+    #
+    # 思路：
+    #   遍历两个数组
+    #
+    # 时间复杂度：
+    #   O(mn)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def breakfastNumber1(self, staple: List[int], drinks: List[int], x: int) -> int:
+        cnt = 0
+        for i in range(len(staple)):
+            for j in range(len(drinks)):
+                if staple[i] + drinks[j] <= x:
+                    cnt += 1
+        return cnt
+
+    # 方法二：
+    #   排序 + 二分
+    #
+    # 思路：
+    #   对于每一个staple[i]
+    #   排序drinks，然后二分查找有多少个drinks[mid]<=x-staple[i]
+    #   从性能上考虑，优先确保staple是长度较小的数组
+    #
+    # 时间复杂度:
+    #   O((m+n)log(min(m,n)))
+    #
+    # 空间复杂度：
+    #   O(1)，不考虑排序使用的堆栈
+    def breakfastNumber(self, staple: List[int], drinks: List[int], x: int) -> int:
+        # 首先确保staple的长度较小
+        if len(staple) > len(drinks):
+            self.breakfastNumber(drinks, staple, x)
+        drinks.sort()
+        cnt = 0
+        for s in staple:
+            # 如果staple已超额
+            if s > x:
+                continue
+            # 如果staple未超额，二分查找所有合法的drinks
+            low, high = -1, len(drinks)
+            while low+1 < high:
+                mid = (low+high) >> 1
+                if drinks[mid] + x <= s:
+                    low = mid
+                else:
+                    high = mid
+            cnt += high
+        return cnt % 1000000007 if cnt > 1000000007 else cnt

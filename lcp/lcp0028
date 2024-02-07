@@ -1,0 +1,89 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：(超时)
+    #   枚举
+    #
+    # 思路：
+    #   循环两次数组
+    #
+    # 时间复杂度：
+    #   O(n^2)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def purchasePlans1(self, nums: List[int], target: int) -> int:
+        cnt = 0
+        for i in range(len(nums)):
+            for j in range(i+1, len(nums)):
+                if nums[i] + nums[j] <= target:
+                    cnt += 1
+        return cnt % 1000000007
+
+    # 方法二：
+    #   双指针
+    #
+    # 思路：
+    #   排序数组后，初始化头尾两个指针
+    #   若元素之和大于target，尾指针向头移动1位
+    #   若元素之和小于等于target，贡献right-left个结果，头指针向尾移动1位
+    #
+    # 时间复杂度：
+    #   O(nlogn)
+    #
+    # 空间复杂度：
+    #   O(1)
+
+    def purchasePlans2(self, nums: List[int], target: int) -> int:
+        nums.sort()
+        cnt, left, right = 0, 0, len(nums)-1
+        while left < right:
+            if nums[left] + nums[right] > target:
+                right -= 1
+            else:
+                cnt += right-left
+                left += 1
+        return cnt % 1000000007
+
+    # 方法三：
+    #   双指针 + 二分
+    #
+    # 思路：
+    #   排序数组后，初始化头尾两个指针
+    #   若元素之和大于target，采用二分，尾指针向头移动若干位
+    #   若元素之和小于等于target，贡献right-left个结果，采用二分，头指针向尾移动若干位，注意贡献的计算
+    #
+    # 时间复杂度：
+    #   O(nlogn)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def purchasePlans(self, nums: List[int], target: int) -> int:
+        nums.sort()
+        cnt, left, right = 0, 0, len(nums)-1
+        while left < right:
+            if nums[left] + nums[right] > target:
+                # 开区间二分，在[left+1,right-1]范围内更新right
+                low, high = left, right
+                while low+1 < high:
+                    mid = (low+high) >> 1
+                    if nums[left] + nums[mid] > target:
+                        high = mid
+                    else:
+                        low = mid
+                right = low
+            else:
+                maxCnt = right - left
+                # 开区间二分，在[left+1,right-1]范围内更新left
+                low, high = left, right
+                while low+1 < high:
+                    mid = (low+high) >> 1
+                    if nums[mid] + nums[right] <= target:
+                        low = mid
+                    else:
+                        high = mid
+                left = high
+                minCnt = right - left + 1
+                cnt += (minCnt+maxCnt)*(maxCnt-minCnt+1)//2
+        return cnt % 1000000007

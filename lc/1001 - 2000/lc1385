@@ -1,0 +1,57 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：
+    #   枚举
+    #
+    # 思路：
+    #   遍历两个数组
+    #
+    # 时间复杂度:
+    #   O(mn)
+    #
+    # 空间复杂度：
+    #   O(1)
+    def findTheDistanceValue1(self, arr1: List[int], arr2: List[int], d: int) -> int:
+        cnt = 0
+        for x in arr1:
+            hit = False
+            for y in arr2:
+                if abs(x-y) <= d:
+                    hit = True
+                    break
+            if hit == False:
+                cnt += 1
+        return cnt
+
+    # 方法二：
+    #   二分
+    #
+    # 思路：
+    #   先arr2进行排序
+    #   对于arr1[i]，若arr2中有元素∈[arr1[i]-d,arr1[i]+d]，距离为0；否则为1
+    #
+    # 时间复杂度：
+    #   O((m+n)logn)
+    # 空间复杂度：
+    #   O(1)
+    def findTheDistanceValue(self, arr1: List[int], arr2: List[int], d: int) -> int:
+        arr2.sort()
+        cnt = 0
+        for x in arr1:
+            if (self.binarySearch(arr2, x-d, x+d) == False):
+                cnt += 1
+        return cnt
+
+    def binarySearch(self, arr: List[int], min: int, max: int) -> bool:
+        low, high = -1, len(arr)
+        while low+1 < high:
+            mid = (low+high) >> 1
+            if min <= arr[mid] and arr[mid] <= max:
+                return True
+            if arr[mid] < min:
+                low = mid
+            else:
+                high = mid
+        return False
