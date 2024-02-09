@@ -34,10 +34,10 @@ class Solution:
     #
     # 空间复杂度：
     #   O(1)，不考虑排序使用的堆栈
-    def breakfastNumber(self, staple: List[int], drinks: List[int], x: int) -> int:
+    def breakfastNumber2(self, staple: List[int], drinks: List[int], x: int) -> int:
         # 首先确保staple的长度较小
         if len(staple) > len(drinks):
-            self.breakfastNumber(drinks, staple, x)
+            self.breakfastNumber2(drinks, staple, x)
         drinks.sort()
         cnt = 0
         for s in staple:
@@ -54,3 +54,32 @@ class Solution:
                     high = mid
             cnt += high
         return cnt % 1000000007 if cnt > 1000000007 else cnt
+
+    # 方法三：
+    #   计数
+    #
+    # 思路：
+    #   遍历第一次staple数组，存储staple的词频
+    #   遍历第二次staple数组，利用差分数组的思路，小于等于某个数时staple的数量
+    #   遍历第一次drinks数组，累加结果
+    #
+    # 时间复杂度：
+    #   O(m+n)
+    #
+    # 空间复杂度
+    #   O(1)
+
+    def breakfastNumber(self, staple: List[int], drinks: List[int], x: int) -> int:
+        if len(staple) > len(drinks):
+            self.breakfastNumber2(drinks, staple, x)
+
+        ans, cnt = 0, [0]*(x+1)
+        for s in staple:
+            if s < x:
+                cnt[s] += 1
+        for i in range(2, x):
+            cnt[i] += cnt[i-1]
+        for d in drinks:
+            if x - d > 0:
+                ans += cnt[x - d]
+        return ans % 1000000007 if ans > 1000000007 else ans
