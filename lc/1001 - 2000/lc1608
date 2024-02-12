@@ -1,0 +1,27 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：
+    #   排序 + 二分
+    #
+    # 思路：
+    #   如果数组中恰有x个元素大于等于x，则x是该数组的特征值；否则为-1
+    #   逆序排序数组
+    #   二分查找：右侧元素的值≥脚标+1
+    #
+    # 时间复杂度：
+    #   O(nlogn)
+    #
+    # 空间复杂度：
+    #   O(1)，不考虑排序
+    def specialArray(self, nums: List[int]) -> int:
+        nums.sort(reverse=True)
+        low, high, mid = -1, len(nums), 0
+        while low+1 < high:
+            mid = (low+high) >> 1
+            if nums[mid] >= mid+1:
+                low = mid
+            else:
+                high = mid
+        return -1 if high < len(nums) and nums[high] >= high else high

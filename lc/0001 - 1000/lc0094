@@ -1,0 +1,53 @@
+from typing import List
+from typing import Optional
+
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+
+class Solution:
+    # 方法一：
+    #   递归
+    #
+    # 思路：
+    #   中序遍历
+    #
+    # 时间复杂度：
+    #   O(n)
+    #
+    # 空间复杂度：
+    #   O(n)
+    #
+    def inorderTraversal1(self, root: Optional[TreeNode]) -> List[int]:
+        if root is None:
+            return []
+        return self.inorderTraversal1(root.left) + [root.val] + self.inorderTraversal1(root.right)
+
+    # 方法二：
+    #   迭代
+    #
+    # 思路：
+    #   中序遍历
+    #
+    # 时间复杂度：
+    #   O(n)
+    #
+    # 空间复杂度：
+    #   O(n)
+    #
+
+    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        traversal, stack = [], []
+        while stack or root:
+            if root:
+                stack.append(root)
+                root = root.left
+            else:
+                tmp = stack.pop()
+                traversal.append(tmp.val)
+                root = tmp.right
+        return traversal
