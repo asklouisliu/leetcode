@@ -1,0 +1,27 @@
+from typing import List
+
+
+class Solution:
+    # 方法一：
+    #   哈希表
+    #
+    # 思路：
+    #   alice的糖果棒总大小为sumA，bob的糖果棒总大小为sumB
+    #   设答案为{x,y}, 即alice将大小为x的糖果棒于bob大小为y的糖果棒交换
+    #   sumA-x+y=sumB+x-y，化简得：x=y+(sumA-sumB)/2
+    #   利用哈希表记录
+    #
+    # 空间复杂度：
+    #   O(m+n)
+    #
+    # 时间复杂度：
+    #   O(m)
+    def fairCandySwap(self, aliceSizes: List[int], bobSizes: List[int]) -> List[int]:
+        sumA, sumB = sum(aliceSizes), sum(bobSizes)
+        delta = (sumA - sumB)//2
+        s = set(aliceSizes)
+        for y in bobSizes:
+            x = y + delta
+            if x in s:
+                return [x, y]
+        return []
